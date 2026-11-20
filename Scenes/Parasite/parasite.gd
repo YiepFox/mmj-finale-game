@@ -28,6 +28,8 @@ extends CharacterBody2D
 ##Check if the player is on dry land
 var _is_in_ground:bool = false
 
+##The current enemy that is on the attack_area
+var _current_enemy = null
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("interact"):
@@ -37,6 +39,10 @@ func _physics_process(delta: float) -> void:
 		_terrestrial_movement(delta)
 	else:
 		_aquatic_movement(delta)
+		
+	if _current_enemy and Input.is_action_just_pressed("attack"):
+		_current_enemy._life -= 1
+		_current_enemy._damage()
 	
 	move_and_slide()
 	
@@ -49,6 +55,12 @@ func _terrestrial_movement(_delta):
 		velocity.y = _ground_jump_force
 	
 	var direction := Input.get_axis("move_left","move_right")
+	
+	if direction == 1:
+		$"attack area".rotation_degrees = 0
+	if direction == -1:
+		$"attack area".rotation_degrees = 180
+	
 	velocity.x = lerp(velocity.x, direction * _ground_speed, _ground_acceleration * _delta * 60)
 
 ##Function of the parasite's movement within water
@@ -62,5 +74,19 @@ func _aquatic_movement(_delta):
 	
 	var direction := Input.get_axis("move_left","move_right")
 	velocity.x = lerp(velocity.x, direction * _water_speed, _aquatic_acceleration * _delta * 60)
+	
+	if direction == 1:
+		$"attack area".rotation_degrees = 0
+	if direction == -1:
+		$"attack area".rotation_degrees = 180
 		
-		
+
+
+func _on_attack_area_body_entered(body: Node2D) -> void:
+	if body is Enemy:
+		_current_enemy = body
+
+
+func _on_attack_area_body_exited(body: Node2D) -> void:
+	if body is Enemy:
+		_current_enemy = null

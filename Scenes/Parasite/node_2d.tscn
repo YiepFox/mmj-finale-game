@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://dg4b0e2r6u2b1" path="res://icon.svg" id="1_gpndb"]
 [ext_resource type="PackedScene" uid="uid://c5c4it4vkhdpn" path="res://Scenes/Parasite/parasite.tscn" id="2_ciqra"]
+[ext_resource type="PackedScene" uid="uid://c0i8xx23er3ik" path="res://Scenes/enemy/prototype_emeny.tscn" id="3_ciqra"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_djyds"]
 texture = ExtResource("1_gpndb")
@@ -22,3 +23,6 @@ tile_set = SubResource("TileSet_r61m7")
 
 [node name="Parasite" parent="." unique_id=1549252458 instance=ExtResource("2_ciqra")]
 position = Vector2(-19, -105)
+
+[node name="prototype_emeny" parent="." unique_id=1170672184 instance=ExtResource("3_ciqra")]
+position = Vector2(329, -108)
