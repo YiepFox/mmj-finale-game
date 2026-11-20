@@ -22,6 +22,8 @@ shape = SubResource("CapsuleShape2D_57suy")
 [node name="Camera" type="Camera2D" parent="." unique_id=500657537]
 
 [node name="attack area" type="Area2D" parent="." unique_id=1513326212]
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="attack area" unique_id=860770590]
 position = Vector2(78.25, 0)

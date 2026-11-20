@@ -27,7 +27,6 @@ extends CharacterBody2D
 
 ##Check if the player is on dry land
 var _is_in_ground:bool = false
-
 ##The current enemy that is on the attack_area
 var _current_enemy = null
 
@@ -42,7 +41,7 @@ func _physics_process(delta: float) -> void:
 		
 	if _current_enemy and Input.is_action_just_pressed("attack"):
 		_current_enemy._life -= 1
-		_current_enemy._damage()
+		_current_enemy._damage(position)
 	
 	move_and_slide()
 	
