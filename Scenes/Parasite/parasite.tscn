@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://c5c4it4vkhdpn"]
+
+[ext_resource type="Texture2D" uid="uid://dg4b0e2r6u2b1" path="res://icon.svg" id="1_ngxf3"]
+[ext_resource type="Script" uid="uid://ceq6ajgsexpxw" path="res://Scenes/Parasite/parasite.gd" id="1_xee50"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_57suy"]
+radius = 20.0
+height = 64.0
+
+[node name="Parasite" type="CharacterBody2D" unique_id=1549252458]
+script = ExtResource("1_xee50")
+
+[node name="Sprite" type="Sprite2D" parent="." unique_id=1618769725]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_ngxf3")
+
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=1292738043]
+shape = SubResource("CapsuleShape2D_57suy")
+
+[node name="Camera" type="Camera2D" parent="." unique_id=500657537]
