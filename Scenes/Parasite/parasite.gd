@@ -25,10 +25,18 @@ extends CharacterBody2D
 ##The force of the jump in water when he touch the bottom of the water
 @export var _water_jump_force = -250.0
 
+@export_group("Attack")
+##The default duration of the cooldown
+@export var _duration = 0.2
+
 ##Check if the player is on dry land
 var _is_in_ground:bool = false
 ##The current enemy that is on the attack_area
 var _current_enemy = null
+##The cooldown of the attack
+var _attack_cd = _duration
+##True if he can attack
+var _can_attack = true
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("interact"):
@@ -39,9 +47,16 @@ func _physics_process(delta: float) -> void:
 	else:
 		_aquatic_movement(delta)
 		
-	if _current_enemy and Input.is_action_just_pressed("attack"):
+	if _current_enemy and Input.is_action_just_pressed("attack") and _can_attack:
+		_can_attack = false
 		_current_enemy._life -= 1
 		_current_enemy._damage(position)
+	
+	if _can_attack == false:
+		_attack_cd -= delta
+		if _attack_cd <= 0:
+			_attack_cd = _duration
+			_can_attack = true
 	
 	move_and_slide()
 	

@@ -27,3 +27,4 @@ position = Vector2(-19, -105)
 
 [node name="prototype_emeny" parent="." unique_id=1170672184 instance=ExtResource("3_ciqra")]
 position = Vector2(116, -261)
+slide_on_ceiling = false

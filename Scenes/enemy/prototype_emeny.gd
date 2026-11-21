@@ -29,6 +29,7 @@ func _physics_process(delta: float) -> void:
 		if _is_pushing:
 			velocity = Vector2.ZERO
 			_is_pushing = false
+			
 	
 	move_and_slide()
 
@@ -42,5 +43,5 @@ func _damage(_from_position) -> void:
 	
 	_is_pushing = true
 	push_angle = position.angle_to_point(_from_position)
-	var vector2_angle = Vector2.from_angle(push_angle + deg_to_rad(180))
-	velocity = vector2_angle * _push_force
+	var vector2_angle = Vector2.from_angle(push_angle + deg_to_rad(180)) + Vector2(0, 0.5)
+	velocity += vector2_angle * _push_force
