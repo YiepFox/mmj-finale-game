@@ -14,8 +14,8 @@ var push_angle:float
 
 func _physics_process(delta: float) -> void:
 	
-	"""if not is_on_floor():
-		velocity += get_gravity() * delta"""
+	if not is_on_floor():
+		velocity += get_gravity() * delta
 	
 	if _life <= 0:
 		queue_free()
