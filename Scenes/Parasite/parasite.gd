@@ -9,25 +9,36 @@ extends CharacterBody2D
 ##The force of the jump on land
 @export var _ground_jump_force:float = -300.0
 ##The acceleration and decceleration on the ground
-@export var _ground_acceleration = 0.2
+@export var _ground_acceleration:float = 0.2
 
 @export_group("Water")
 ##The parasite’s movement in the water
 @export var _water_speed:float = 200.0
 ##The parasite’s propulsion within water
-@export var _swiming_impulse = -180.0
+@export var _swiming_impulse:float = -180.0
 ##The gravity underwater
-@export var _water_gravity = 250.0
+@export var _water_gravity:float = 250.0
 ##The maximum speed at which the parasite can sink underwater
-@export var _max_water_fall_speed = 150.0
+@export var _max_water_fall_speed:float = 150.0
 ##The acceleration and decceleration in the water
-@export var _aquatic_acceleration = 0.05
+@export var _aquatic_acceleration:float = 0.05
 ##The force of the jump in water when he touch the bottom of the water
-@export var _water_jump_force = -250.0
+@export var _water_jump_force:float = -250.0
+
+@export_group("Attack")
+##The amount of damage the parasite can inflict
+@export var _damage:float = 1.0
+##The default duration of the cooldown
+@export var _cooldown_duration:float = 0.2
 
 ##Check if the player is on dry land
 var _is_in_ground:bool = false
-
+##The current enemy that is on the attack_area
+var _current_enemy:Enemy = null
+##The cooldown of the attack
+var _attack_cooldown:float = _cooldown_duration
+##True if he can attack
+var _can_attack:bool = true
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("interact"):
@@ -37,6 +48,15 @@ func _physics_process(delta: float) -> void:
 		_terrestrial_movement(delta)
 	else:
 		_aquatic_movement(delta)
+		
+	if _current_enemy and Input.is_action_just_pressed("attack") and _can_attack:
+		_attack(delta)
+	
+	if _can_attack == false:
+		_attack_cooldown -= delta
+		if _attack_cooldown <= 0:
+			_attack_cooldown = _cooldown_duration
+			_can_attack = true
 	
 	move_and_slide()
 	
@@ -49,6 +69,12 @@ func _terrestrial_movement(_delta):
 		velocity.y = _ground_jump_force
 	
 	var direction := Input.get_axis("move_left","move_right")
+	
+	if direction == 1:
+		$"attack area".rotation_degrees = 0
+	if direction == -1:
+		$"attack area".rotation_degrees = 180
+	
 	velocity.x = lerp(velocity.x, direction * _ground_speed, _ground_acceleration * _delta * 60)
 
 ##Function of the parasite's movement within water
@@ -62,5 +88,24 @@ func _aquatic_movement(_delta):
 	
 	var direction := Input.get_axis("move_left","move_right")
 	velocity.x = lerp(velocity.x, direction * _water_speed, _aquatic_acceleration * _delta * 60)
+	
+	if direction == 1:
+		$"attack area".rotation_degrees = 0
+	if direction == -1:
+		$"attack area".rotation_degrees = 180
 		
-		
+
+#The attack function
+func _attack(_delta):
+	_can_attack = false
+	if _current_enemy.has_method("_take_damage"):
+		_current_enemy._take_damage(_damage, global_position)
+
+
+func _on_attack_area_body_entered(body: Node2D) -> void:
+	if body is Enemy:
+		_current_enemy = body
+
+func _on_attack_area_body_exited(body: Node2D) -> void:
+	if body is Enemy:
+		_current_enemy = null
