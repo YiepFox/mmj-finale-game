@@ -1,0 +1,48 @@
+[gd_scene format=4 uid="uid://cce4amfr4jp00"]
+
+[ext_resource type="Texture2D" uid="uid://dg4b0e2r6u2b1" path="res://icon.svg" id="1_gpndb"]
+[ext_resource type="PackedScene" uid="uid://c5c4it4vkhdpn" path="res://Scenes/Parasite/parasite.tscn" id="2_ciqra"]
+[ext_resource type="PackedScene" uid="uid://c0i8xx23er3ik" path="res://Scenes/enemy/prototype_emeny.tscn" id="3_ciqra"]
+[ext_resource type="PackedScene" uid="uid://bs67b5fn5gett" path="res://Scenes/enemy/frog.tscn" id="4_djyds"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_djyds"]
+texture = ExtResource("1_gpndb")
+texture_region_size = Vector2i(128, 128)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
+
+[sub_resource type="TileSet" id="TileSet_r61m7"]
+tile_size = Vector2i(128, 128)
+physics_layer_0/collision_layer = 3
+physics_layer_0/collision_mask = 3
+sources/0 = SubResource("TileSetAtlasSource_djyds")
+
+[node name="Node2D" type="Node2D" unique_id=1485365557]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1713813677]
+tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAACAAAAAAAAAAAAAAADAAAAAAAAAAAAAAD//wAAAAAAAAAAAAD+/wEAAAAAAAAAAAD//wEAAAAAAAAAAAAAAAEAAAAAAAAAAAABAAEAAAAAAAAAAAACAAEAAAAAAAAAAAADAAEAAAAAAAAAAAAEAAEAAAAAAAAAAAAFAAEAAAAAAAAAAAAGAAEAAAAAAAAAAAAGAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAD+/wAAAAAAAAAAAAD+/wIAAAAAAAAAAAD//wIAAAAAAAAAAAAAAAIAAAAAAAAAAAABAAIAAAAAAAAAAAACAAIAAAAAAAAAAAADAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAAFAAIAAAAAAAAAAAAGAAIAAAAAAAAAAAD9/wAAAAAAAAAAAAD9/wEAAAAAAAAAAAD9/wIAAAAAAAAAAAD8/wIAAAAAAAAAAAD8/wEAAAAAAAAAAAD8/wAAAAAAAAAAAAD7/wAAAAAAAAAAAAD7/wEAAAAAAAAAAAD7/wIAAAAAAAAAAAD6/wIAAAAAAAAAAAD6/wEAAAAAAAAAAAD6/wAAAAAAAAAAAAAHAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAALAAAAAAAAAAAAAAALAAEAAAAAAAAAAAALAAIAAAAAAAAAAAAKAAIAAAAAAAAAAAAJAAIAAAAAAAAAAAAIAAIAAAAAAAAAAAAIAAMAAAAAAAAAAAAHAAMAAAAAAAAAAAAHAAIAAAAAAAAAAAAIAAEAAAAAAAAAAAAJAAEAAAAAAAAAAAAKAAEAAAAAAAAAAAAHAAEAAAAAAAAAAAA=")
+tile_set = SubResource("TileSet_r61m7")
+
+[node name="Parasite" parent="." unique_id=1549252458 instance=ExtResource("2_ciqra")]
+position = Vector2(-19, -105)
+
+[node name="prototype_emeny" parent="." unique_id=1170672184 instance=ExtResource("3_ciqra")]
+position = Vector2(116, -261)
+slide_on_ceiling = false
+_max_life = 5.0
+_ground_speed = 300.0
+_ground_push_force = 300.0
+_ground_hop_force = -120.0
+_ground_knockback_duration = 0.18
+_ground_knockback_friction = 1200.0
+_water_speed = 200.0
+_water_push_force = 170.0
+_water_hop_force = -55.0
+_water_knockback_duration = 0.28
+_water_gravity = 220.0
+_max_water_fall_speed = 130.0
+_water_drag = 9.0
+_is_in_water = true
+
+[node name="Frog" parent="." unique_id=1228520433 instance=ExtResource("4_djyds")]
+position = Vector2(-319, -163)

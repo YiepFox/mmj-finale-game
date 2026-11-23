@@ -7,10 +7,8 @@
 radius = 36.0
 height = 128.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xee50"]
-size = Vector2(124.5, 128)
-
 [node name="Parasite" type="CharacterBody2D" unique_id=1549252458]
+collision_mask = 6
 script = ExtResource("1_xee50")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1618769725]
@@ -20,9 +18,10 @@ texture = ExtResource("1_ngxf3")
 shape = SubResource("CapsuleShape2D_57suy")
 
 [node name="Camera" type="Camera2D" parent="." unique_id=500657537]
+<<<<<<< Updated upstream
+=======
 
 [node name="attack area" type="Area2D" parent="." unique_id=1513326212]
-collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="attack area" unique_id=860770590]
@@ -31,3 +30,4 @@ shape = SubResource("RectangleShape2D_xee50")
 
 [connection signal="body_entered" from="attack area" to="." method="_on_attack_area_body_entered"]
 [connection signal="body_exited" from="attack area" to="." method="_on_attack_area_body_exited"]
+>>>>>>> Stashed changes
