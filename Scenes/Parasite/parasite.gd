@@ -4,32 +4,6 @@ extends CharacterBody2D
 @export var _max_life: float = 5.0
 
 @export_group("Ground")
-<<<<<<< Updated upstream
-##The parasite’s movement on the ground
-@export var _ground_speed:float = 300.0
-##The force of the jump on land
-@export var _ground_jump_force:float = -300.0
-##The acceleration and decceleration on the ground
-@export var _ground_acceleration = 0.2
-
-@export_group("Water")
-##The parasite’s movement in the water
-@export var _water_speed:float = 200.0
-##The parasite’s propulsion within water
-@export var _swiming_impulse = -180.0
-##The gravity underwater
-@export var _water_gravity = 250.0
-##The maximum speed at which the parasite can sink underwater
-@export var _max_water_fall_speed = 150.0
-##The acceleration and decceleration in the water
-@export var _aquatic_acceleration = 0.05
-##The force of the jump in water when he touch the bottom of the water
-@export var _water_jump_force = -250.0
-
-##Check if the player is on dry land
-var _is_in_ground:bool = false
-
-=======
 ## The parasite’s movement on the ground
 @export var _ground_speed: float = 300.0
 ## The force of the jump on land
@@ -83,7 +57,6 @@ func _ready() -> void:
 	_current_health = _max_life
 	_save_base_stats()
 
->>>>>>> Stashed changes
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("interact"):
@@ -98,9 +71,6 @@ func _physics_process(delta: float) -> void:
 		_terrestrial_movement(delta)
 	else:
 		_aquatic_movement(delta)
-<<<<<<< Updated upstream
-	
-=======
 
 	if _current_enemy and Input.is_action_just_pressed("attack") and _can_attack:
 		_attack()
@@ -111,7 +81,6 @@ func _physics_process(delta: float) -> void:
 			_attack_cooldown = 0.0
 			_can_attack = true
 
->>>>>>> Stashed changes
 	move_and_slide()
 
 
@@ -196,12 +165,6 @@ func _terrestrial_movement(_delta: float) -> void:
 
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = _ground_jump_force
-<<<<<<< Updated upstream
-	
-	var direction := Input.get_axis("move_left","move_right")
-	velocity.x = lerp(velocity.x, direction * _ground_speed, _ground_acceleration * _delta * 60)
-=======
->>>>>>> Stashed changes
 
 	var direction := Input.get_axis("move_left", "move_right")
 	_update_attack_area_facing(direction)
@@ -212,17 +175,6 @@ func _terrestrial_movement(_delta: float) -> void:
 func _aquatic_movement(_delta: float) -> void:
 	velocity.y += _water_gravity * _delta
 	velocity.y = min(velocity.y, _max_water_fall_speed)
-<<<<<<< Updated upstream
-	
-	if Input.is_action_just_pressed("jump"):
-		
-		velocity.y = _water_jump_force if is_on_floor() else _swiming_impulse
-	
-	var direction := Input.get_axis("move_left","move_right")
-	velocity.x = lerp(velocity.x, direction * _water_speed, _aquatic_acceleration * _delta * 60)
-		
-		
-=======
 
 	if Input.is_action_just_pressed("jump"):
 		velocity.y = _water_jump_force if is_on_floor() else _swiming_impulse
@@ -262,4 +214,3 @@ func _calculates_infected_current_life(infected_max: float) -> void:
 		return
 	var health_ratio: float = clamp(_current_health / _max_life, 0.0, 1.0)
 	_current_health = health_ratio * infected_max
->>>>>>> Stashed changes

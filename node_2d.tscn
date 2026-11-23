@@ -1,0 +1,29 @@
+[gd_scene format=4 uid="uid://b5bx1pap8tmj5"]
+
+[ext_resource type="Texture2D" uid="uid://dg4b0e2r6u2b1" path="res://icon.svg" id="1_epypp"]
+[ext_resource type="PackedScene" uid="uid://bs67b5fn5gett" path="res://Scenes/enemy/frog.tscn" id="2_0hol4"]
+[ext_resource type="PackedScene" uid="uid://c5c4it4vkhdpn" path="res://Scenes/Parasite/parasite.tscn" id="3_q6r6c"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kdubu"]
+texture = ExtResource("1_epypp")
+texture_region_size = Vector2i(128, 128)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
+
+[sub_resource type="TileSet" id="TileSet_57suy"]
+tile_size = Vector2i(128, 128)
+physics_layer_0/collision_layer = 4
+physics_layer_0/collision_mask = 0
+sources/0 = SubResource("TileSetAtlasSource_kdubu")
+
+[node name="Node2D" type="Node2D" unique_id=290241030]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=132060240]
+tile_map_data = PackedByteArray("AAD9/wAAAAAAAAAAAAD+/wAAAAAAAAAAAAD//wAAAAAAAAAAAAD//wEAAAAAAAAAAAAAAAEAAAAAAAAAAAABAAEAAAAAAAAAAAACAAEAAAAAAAAAAAACAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAEAAAAAAAAAAAAEAAEAAAAAAAAAAAAFAAEAAAAAAAAAAAAGAAEAAAAAAAAAAAD+/wEAAAAAAAAAAAD9/wEAAAAAAAAAAAADAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAHAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAIAAEAAAAAAAAAAAAHAAEAAAAAAAAAAAA=")
+tile_set = SubResource("TileSet_57suy")
+
+[node name="Frog" parent="." unique_id=1228520433 instance=ExtResource("2_0hol4")]
+position = Vector2(-85, -107)
+
+[node name="Parasite" parent="." unique_id=1549252458 instance=ExtResource("3_q6r6c")]
+position = Vector2(213, -116)
