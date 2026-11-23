@@ -4,7 +4,7 @@ class_name Enemy
 @export_group("Life")
 @export var _max_life: float = 5.0
 
-@export_group("Combat")
+@export_group("Attack")
 @export var _damage: float = 1.0
 @export var _cooldown_duration: float = 0.2
 
@@ -12,8 +12,8 @@ class_name Enemy
 @export var _ground_speed: float = 300.0
 @export var _ground_jump_force: float = -300.0
 @export var _ground_acceleration: float = 0.2
-@export var _ground_push_force: float = 300.0
-@export var _ground_hop_force: float = -120.0
+@export var _ground_push_force: float = 350.0
+@export var _ground_hop_force: float = -150.0
 @export var _ground_knockback_duration: float = 0.18
 @export var _ground_knockback_friction: float = 1200.0
 
@@ -22,14 +22,13 @@ class_name Enemy
 @export var _swiming_impulse: float = -180.0
 @export var _water_jump_force: float = -250.0
 @export var _water_aquatic_acceleration: float = 0.05
-@export var _water_push_force: float = 170.0
+@export var _water_push_force: float = 250.0
 @export var _water_hop_force: float = -55.0
 @export var _water_knockback_duration: float = 0.28
 @export var _water_gravity: float = 220.0
 @export var _max_water_fall_speed: float = 130.0
 ## The higher the value, the heavier the water resistance feels.
 @export var _water_drag: float = 9.0
-
 @export var _is_in_water: bool = true
 
 var _current_life: float

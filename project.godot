@@ -56,9 +56,8 @@ jump={
 
 [layer_names]
 
-2d_physics/layer_1="parasite"
-2d_physics/layer_2="enemies"
-2d_physics/layer_3="floor"
+2d_physics/layer_1="floor"
+2d_physics/layer_2="parasite attack"
 
 [physics]
 

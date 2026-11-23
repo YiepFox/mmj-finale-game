@@ -143,11 +143,10 @@ func _apply_stats_from_dictionary(data: Dictionary) -> void:
 func infect_enemy(enemy: Enemy) -> void:
 	if enemy == null or not enemy.has_method("get_infection_data"):
 		return
-
+	
 	_apply_stats_from_dictionary(enemy.get_infection_data())
+	_infect_animation(_current_enemy.position)
 	_is_infected = true
-	enemy.queue_free()
-	_current_enemy = null
 
 
 func eject_host() -> void:
@@ -214,3 +213,17 @@ func _calculates_infected_current_life(infected_max: float) -> void:
 		return
 	var health_ratio: float = clamp(_current_health / _max_life, 0.0, 1.0)
 	_current_health = health_ratio * infected_max
+
+func _infect_animation(_enemy_position) -> void:
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "scale:y", 0.0, 0.2).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	await tween.finished
+	
+	position = _enemy_position
+	_current_enemy.queue_free()
+	_current_enemy = null
+	
+	## the new look code here
+	
+	var tween2 = get_tree().create_tween()
+	tween2.tween_property(self, "scale:y", 1.0, 0.2).set_trans(Tween.TRANS_EXPO)
