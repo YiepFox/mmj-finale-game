@@ -59,6 +59,7 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	print(_current_enemy)
 	if Input.is_action_just_pressed("interact"):
 		if _current_enemy and not _is_infected:
 			infect_enemy(_current_enemy)
@@ -145,7 +146,7 @@ func infect_enemy(enemy: Enemy) -> void:
 		return
 	
 	_apply_stats_from_dictionary(enemy.get_infection_data())
-	_infect_animation(_current_enemy.position)
+	_infect_animation(_current_enemy.position, _current_enemy)
 	_is_infected = true
 
 
@@ -214,16 +215,20 @@ func _calculates_infected_current_life(infected_max: float) -> void:
 	var health_ratio: float = clamp(_current_health / _max_life, 0.0, 1.0)
 	_current_health = health_ratio * infected_max
 
-func _infect_animation(_enemy_position) -> void:
+func _infect_animation(_enemy_position, _enemy) -> void:
 	var tween = get_tree().create_tween()
 	tween.tween_property(self, "scale:y", 0.0, 0.2).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	await tween.finished
 	
 	position = _enemy_position
-	_current_enemy.queue_free()
+	_enemy.queue_free()
 	_current_enemy = null
 	
 	## the new look code here
 	
-	var tween2 = get_tree().create_tween()
-	tween2.tween_property(self, "scale:y", 1.0, 0.2).set_trans(Tween.TRANS_EXPO)
+	modulate = Color8(0, 193, 6)
+	##only to test how much it is satisfying
+	
+	scale.y = 1.0
+	"""var tween2 = get_tree().create_tween()
+	tween2.tween_property(self, "scale:y", 1.0, 0.2).set_trans(Tween.TRANS_EXPO)"""
