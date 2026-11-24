@@ -217,8 +217,11 @@ func _calculates_infected_current_life(infected_max: float) -> void:
 
 func _infect_animation(_enemy_position, _enemy) -> void:
 	var tween = get_tree().create_tween()
-	tween.tween_property(self, "scale:y", 0.0, 0.2).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "scale:y", 0.5, 0.2).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	await tween.finished
+	var tween2 = get_tree().create_tween()
+	tween2.tween_property(self, "scale:y", 0.0, 0.2).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	await tween2.finished
 	
 	position = _enemy_position
 	_enemy.queue_free()
@@ -227,8 +230,6 @@ func _infect_animation(_enemy_position, _enemy) -> void:
 	## the new look code here
 	
 	modulate = Color8(0, 193, 6)
-	##only to test how much it is satisfying
+	##only to test how much it is satisfying ;-;
 	
 	scale.y = 1.0
-	"""var tween2 = get_tree().create_tween()
-	tween2.tween_property(self, "scale:y", 1.0, 0.2).set_trans(Tween.TRANS_EXPO)"""
