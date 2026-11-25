@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://b165kjoc7bpci" path="res://Scenes/enemy/amphibious_brute.gd" id="1_8vgkj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_57suy"]
-size = Vector2(120, 121)
+size = Vector2(120, 121.5)
 
 [node name="Frog" type="CharacterBody2D" unique_id=1228520433]
 collision_layer = 2

@@ -59,7 +59,6 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	print(_current_enemy)
 	if Input.is_action_just_pressed("interact"):
 		if _current_enemy and not _is_infected:
 			infect_enemy(_current_enemy)
@@ -153,6 +152,8 @@ func infect_enemy(enemy: Enemy) -> void:
 func eject_host() -> void:
 	if not _is_infected:
 		return
+	
+	_eject_enemy_sprite()
 
 	_apply_stats_from_dictionary(_base_stats)
 	_is_infected = false
@@ -215,6 +216,7 @@ func _calculates_infected_current_life(infected_max: float) -> void:
 	var health_ratio: float = clamp(_current_health / _max_life, 0.0, 1.0)
 	_current_health = health_ratio * infected_max
 
+
 func _infect_animation(_enemy_position, _enemy) -> void:
 	var tween = get_tree().create_tween()
 	tween.tween_property(self, "scale:y", 0.5, 0.2).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
@@ -223,13 +225,42 @@ func _infect_animation(_enemy_position, _enemy) -> void:
 	tween2.tween_property(self, "scale:y", 0.0, 0.2).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 	await tween2.finished
 	
+	_change_sprite(_enemy)
 	position = _enemy_position
 	_enemy.queue_free()
 	_current_enemy = null
 	
-	## the new look code here
-	
-	modulate = Color8(0, 193, 6)
-	##only to test how much it is satisfying ;-;
-	
 	scale.y = 1.0
+
+
+func _change_sprite(_enemy) -> void:
+	
+	if _enemy.has_node("Sprite2D"):
+		var new_sprite = _enemy.get_node("Sprite2D").duplicate()
+		add_child(new_sprite)
+		
+	elif _enemy.has_node("AnimatedSprite2D"):
+		var new_sprite = _enemy.get_node("AnimatedSprite2D").duplicate()
+		add_child(new_sprite)
+	
+	if _enemy.has_node("CollisionShape2D"):
+		var new_collision = _enemy.get_node("CollisionShape2D").duplicate()
+		add_child(new_collision)
+	
+	$Sprite.hide()
+	$Collision.disabled = true
+
+
+func _eject_enemy_sprite() -> void:
+	
+	$Sprite.show()
+	$Collision.disabled = false
+	
+	if has_node("Sprite2D"):
+		$Sprite2D.queue_free()
+		
+	elif has_node("AnimatedSprite2D"):
+		$AnimatedSprite2D.queue_free()
+	
+	if has_node("CollisionShape2D"):
+		$CollisionShape2D.queue_free()
