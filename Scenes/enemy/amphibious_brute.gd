@@ -23,6 +23,5 @@ func _init() -> void:
 
 func get_infection_data() -> Dictionary:
 	var data := super.get_infection_data()
-	# Caso queira adicionar dados extras específicos deste inimigo no futuro:
 	data["creature_type"] = "amphibious_brute"
 	return data

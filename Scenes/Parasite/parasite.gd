@@ -63,7 +63,7 @@ func _physics_process(delta: float) -> void:
 		if _current_enemy and not _is_infected:
 			infect_enemy(_current_enemy)
 		elif _is_infected:
-			eject_host()
+			_eject_host()
 		else:
 			_is_in_ground = not _is_in_ground
 
@@ -149,7 +149,7 @@ func infect_enemy(enemy: Enemy) -> void:
 	_is_infected = true
 
 
-func eject_host() -> void:
+func _eject_host() -> void:
 	if not _is_infected:
 		return
 	
