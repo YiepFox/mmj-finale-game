@@ -25,5 +25,8 @@ tile_set = SubResource("TileSet_57suy")
 [node name="Frog" parent="." unique_id=1228520433 instance=ExtResource("2_0hol4")]
 position = Vector2(-85, -107)
 
+[node name="Frog2" parent="." unique_id=1929415652 instance=ExtResource("2_0hol4")]
+position = Vector2(514, -107)
+
 [node name="Parasite" parent="." unique_id=1549252458 instance=ExtResource("3_q6r6c")]
 position = Vector2(213, -116)

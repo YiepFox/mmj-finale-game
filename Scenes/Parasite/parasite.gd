@@ -3,6 +3,14 @@ extends CharacterBody2D
 @export_category("Settings")
 @export var _max_life: float = 5.0
 
+@export_group("Moves")
+## The moves that the parasite can get trought infection
+var _moves:Array[CreatureMove] = []
+## The move's cooldown
+var _move_cooldowns:Array[float] = [0.0, 0.0]
+## The direction that the player is facing in X axis
+var _facing_x:float = 1.0
+
 @export_group("Ground")
 ## The parasite’s movement on the ground
 @export var _ground_speed: float = 300.0
@@ -34,11 +42,6 @@ extends CharacterBody2D
 ## The higher the value, the heavier the water resistance feels.
 @export var _water_drag: float = 9.0
 
-@export_group("Attack")
-## The amount of damage the parasite can inflict
-@export var _damage: float = 1.0
-## The default duration of the cooldown
-@export var _cooldown_duration: float = 0.2
 
 ## Check if the player is on dry land
 var _is_in_ground: bool = false
@@ -59,36 +62,59 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if Input.is_action_just_pressed("interact"):
+	if Input.is_action_just_pressed("infect"):
 		if _current_enemy and not _is_infected:
 			infect_enemy(_current_enemy)
 		elif _is_infected:
 			_eject_host()
-		else:
-			_is_in_ground = not _is_in_ground
+	if Input.is_action_just_pressed("interact"):
+		_is_in_ground = not _is_in_ground
 
 	if _is_in_ground:
 		_terrestrial_movement(delta)
 	else:
 		_aquatic_movement(delta)
 
-	if _current_enemy and Input.is_action_just_pressed("attack") and _can_attack:
-		_attack()
+	if _current_enemy and Input.is_action_just_pressed("move_1"):
+		_try_use_move(0)
+	if _current_enemy and Input.is_action_just_pressed("move_2"):
+		_try_use_move(1)
 
 	if not _can_attack:
 		_attack_cooldown -= delta
 		if _attack_cooldown <= 0.0:
 			_attack_cooldown = 0.0
 			_can_attack = true
+	
+	for i in range(_move_cooldowns.size()):
+		if _move_cooldowns[i] > 0.0:
+			_move_cooldowns[i] = maxf(0.0, _move_cooldowns[i] - delta)
 
 	move_and_slide()
 
 
+func infect_enemy(enemy: Enemy) -> void:
+	if enemy == null or not enemy.has_method("get_infection_data"):
+		return
+	
+	_apply_stats_from_dictionary(enemy.get_infection_data())
+	_infect_animation(_current_enemy.global_position, _current_enemy)
+	_is_infected = true
+
+func _eject_host() -> void:
+	if not _is_infected:
+		return
+	
+	_eject_enemy_sprite()
+	_apply_stats_from_dictionary(_base_stats)
+	_moves.clear()
+	_move_cooldowns = [0.0, 0.0]
+	_is_infected = false
+	
+	
 func _save_base_stats() -> void:
 	_base_stats = {
 		"max_life": _max_life,
-		"damage": _damage,
-		"cooldown_duration": _cooldown_duration,
 		"ground_speed": _ground_speed,
 		"ground_jump_force": _ground_jump_force,
 		"ground_acceleration": _ground_acceleration,
@@ -108,14 +134,10 @@ func _save_base_stats() -> void:
 		"water_drag": _water_drag,
 	}
 
-
 func _apply_stats_from_dictionary(data: Dictionary) -> void:
 	var new_max_life: float = data.get("max_life", _max_life)
 	_calculates_infected_current_life(new_max_life)
 	_max_life = new_max_life
-
-	_damage = data.get("damage", _damage)
-	_cooldown_duration = data.get("cooldown_duration", _cooldown_duration)
 
 	_ground_speed = data.get("ground_speed", _ground_speed)
 	_ground_jump_force = data.get("ground_jump_force", _ground_jump_force)
@@ -135,28 +157,17 @@ func _apply_stats_from_dictionary(data: Dictionary) -> void:
 	_water_hop_force = data.get("water_hop_force", _water_hop_force)
 	_water_knockback_duration = data.get("water_knockback_duration", _water_knockback_duration)
 	_water_drag = data.get("water_drag", _water_drag)
+	
+	_moves.clear()
+	_move_cooldowns = [0.0, 0.0]
+	if data.has("moves"):
+		var raw_moves:Array = data["moves"]
+		for i in range(mini(raw_moves.size(), 2)):
+			if raw_moves[i] is CreatureMove:
+				_moves.append(raw_moves[i])
 
 	if data.has("is_in_water"):
 		_is_in_ground = not data["is_in_water"]
-
-
-func infect_enemy(enemy: Enemy) -> void:
-	if enemy == null or not enemy.has_method("get_infection_data"):
-		return
-	
-	_apply_stats_from_dictionary(enemy.get_infection_data())
-	_infect_animation(_current_enemy.position, _current_enemy)
-	_is_infected = true
-
-
-func _eject_host() -> void:
-	if not _is_infected:
-		return
-	
-	_eject_enemy_sprite()
-
-	_apply_stats_from_dictionary(_base_stats)
-	_is_infected = false
 
 
 ## Function of the parasite's movement outside of water
@@ -170,7 +181,6 @@ func _terrestrial_movement(_delta: float) -> void:
 	var direction := Input.get_axis("move_left", "move_right")
 	_update_attack_area_facing(direction)
 	velocity.x = lerp(velocity.x, direction * _ground_speed, _ground_acceleration * _delta * 60.0)
-
 
 ## Function of the parasite's movement within water
 func _aquatic_movement(_delta: float) -> void:
@@ -188,15 +198,27 @@ func _aquatic_movement(_delta: float) -> void:
 func _update_attack_area_facing(direction: float) -> void:
 	if direction > 0.0:
 		$"attack area".rotation_degrees = 0.0
+		_facing_x = 1.0
 	elif direction < 0.0:
 		$"attack area".rotation_degrees = 180.0
+		_facing_x = -1.0
 
 
-func _attack() -> void:
-	_can_attack = false
-	_attack_cooldown = _cooldown_duration
-	if _current_enemy and _current_enemy.has_method("_take_damage"):
-		_current_enemy._take_damage(_damage, global_position)
+func _try_use_move(_slot:int) -> bool:
+	if not _is_infected: return false
+	if _slot < 0 or _slot >= _moves.size() or _slot >= 2:
+		return false
+	var move := _moves[_slot]
+	if move == null or _move_cooldowns[_slot] > 0.0:
+		return false
+	
+	_move_cooldowns[_slot] = move._cooldown
+	var ctx := {
+		"facing_x": _facing_x,
+		"target": _current_enemy
+	}
+	move._execute(self, ctx)
+	return true
 
 
 func _on_attack_area_body_entered(body: Node2D) -> void:
@@ -226,7 +248,7 @@ func _infect_animation(_enemy_position, _enemy) -> void:
 	await tween2.finished
 	
 	_change_sprite(_enemy)
-	position = _enemy_position
+	global_position = _enemy_position
 	_enemy.queue_free()
 	_current_enemy = null
 	
@@ -234,11 +256,9 @@ func _infect_animation(_enemy_position, _enemy) -> void:
 
 
 func _change_sprite(_enemy) -> void:
-	
 	if _enemy.has_node("Sprite2D"):
 		var new_sprite = _enemy.get_node("Sprite2D").duplicate()
 		add_child(new_sprite)
-		
 	elif _enemy.has_node("AnimatedSprite2D"):
 		var new_sprite = _enemy.get_node("AnimatedSprite2D").duplicate()
 		add_child(new_sprite)
@@ -250,17 +270,14 @@ func _change_sprite(_enemy) -> void:
 	$Sprite.hide()
 	$Collision.disabled = true
 
-
 func _eject_enemy_sprite() -> void:
-	
 	$Sprite.show()
 	$Collision.disabled = false
 	
 	if has_node("Sprite2D"):
-		$Sprite2D.queue_free()
-		
+		$Sprite2D.queue_free()	
 	elif has_node("AnimatedSprite2D"):
 		$AnimatedSprite2D.queue_free()
-	
+
 	if has_node("CollisionShape2D"):
 		$CollisionShape2D.queue_free()

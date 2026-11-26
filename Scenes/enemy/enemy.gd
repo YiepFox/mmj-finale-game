@@ -4,9 +4,9 @@ class_name Enemy
 @export_group("Life")
 @export var _max_life: float = 5.0
 
-@export_group("Attack")
-@export var _damage: float = 1.0
-@export var _cooldown_duration: float = 0.2
+@export_group("Moves")
+@export var _moves:Array[CreatureMove] = []
+@export var _move_cooldowns:Array[float] = [0.0, 0.0]	
 
 @export_group("Ground")
 @export var _ground_speed: float = 300.0
@@ -45,6 +45,10 @@ func _physics_process(delta: float) -> void:
 
 	if _knockback_timer > 0.0:
 		_knockback_timer -= delta
+	
+	for i in range(_move_cooldowns.size()):
+		if _move_cooldowns[i] > 0.0:
+			_move_cooldowns[i] = maxf(0.0, _move_cooldowns[i] - delta)
 
 	if _is_in_water:
 		_apply_water_physics(delta)
@@ -54,39 +58,12 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 
-func get_infection_data() -> Dictionary:
-	return {
-		"max_life": _max_life,
-		"damage": _damage,
-		"cooldown_duration": _cooldown_duration,
-		"is_in_water": _is_in_water,
-		"ground_speed": _ground_speed,
-		"ground_jump_force": _ground_jump_force,
-		"ground_acceleration": _ground_acceleration,
-		"ground_push_force": _ground_push_force,
-		"ground_hop_force": _ground_hop_force,
-		"ground_knockback_duration": _ground_knockback_duration,
-		"ground_knockback_friction": _ground_knockback_friction,
-		"water_speed": _water_speed,
-		"swiming_impulse": _swiming_impulse,
-		"water_jump_force": _water_jump_force,
-		"water_aquatic_acceleration": _water_aquatic_acceleration,
-		"water_push_force": _water_push_force,
-		"water_hop_force": _water_hop_force,
-		"water_knockback_duration": _water_knockback_duration,
-		"water_gravity": _water_gravity,
-		"max_water_fall_speed": _max_water_fall_speed,
-		"water_drag": _water_drag,
-	}
-
-
 func _apply_ground_physics(_delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * _delta
 
 	if _knockback_timer > 0.0 or is_on_floor():
 		velocity.x = move_toward(velocity.x, 0.0, _ground_knockback_friction * _delta)
-
 
 func _apply_water_physics(delta: float) -> void:
 	# Limited gravity in water
@@ -120,6 +97,39 @@ func _take_damage(_damage_received: float, _from_position: Vector2) -> void:
 		_knockback_timer = _ground_knockback_duration
 
 	_play_hit_flash()
+	
+
+func get_infection_data() -> Dictionary:
+	var data = {
+		"max_life": _max_life,
+		"is_in_water": _is_in_water,
+		
+		"ground_speed": _ground_speed,
+		"ground_jump_force": _ground_jump_force,
+		"ground_acceleration": _ground_acceleration,
+		"ground_push_force": _ground_push_force,
+		"ground_hop_force": _ground_hop_force,
+		"ground_knockback_duration": _ground_knockback_duration,
+		"ground_knockback_friction": _ground_knockback_friction,
+		
+		"water_speed": _water_speed,
+		"swiming_impulse": _swiming_impulse,
+		"water_jump_force": _water_jump_force,
+		"water_aquatic_acceleration": _water_aquatic_acceleration,
+		"water_push_force": _water_push_force,
+		"water_hop_force": _water_hop_force,
+		"water_knockback_duration": _water_knockback_duration,
+		"water_gravity": _water_gravity,
+		"max_water_fall_speed": _max_water_fall_speed,
+		"water_drag": _water_drag,
+	}
+	
+	var copied_moves:Array[CreatureMove] = []
+	for i in range(mini(_moves.size(), 2)):
+		copied_moves.append(_moves[i])
+	data["moves"] = copied_moves
+	
+	return data
 
 
 func _play_hit_flash() -> void:

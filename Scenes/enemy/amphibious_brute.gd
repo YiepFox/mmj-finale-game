@@ -4,8 +4,6 @@ class_name AmphibiousBrute
 
 func _init() -> void:
 	_max_life = 14.0
-	_damage = 2.5
-	_cooldown_duration = 0.35
 
 	_ground_speed = 220.0
 	_ground_jump_force = -380.0
