@@ -64,7 +64,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("infect"):
 		if _current_enemy and not _is_infected:
-			infect_enemy(_current_enemy)
+			_infect_enemy(_current_enemy)
 		elif _is_infected:
 			_eject_host()
 	if Input.is_action_just_pressed("interact"):
@@ -92,8 +92,31 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
+## Function of the parasite's movement outside of water
+func _terrestrial_movement(_delta: float) -> void:
+	if not is_on_floor():
+		velocity += get_gravity() * _delta
 
-func infect_enemy(enemy: Enemy) -> void:
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = _ground_jump_force
+
+	var direction := Input.get_axis("move_left", "move_right")
+	_update_attack_area_facing(direction)
+	velocity.x = lerp(velocity.x, direction * _ground_speed, _ground_acceleration * _delta * 60.0)
+
+## Function of the parasite's movement within water
+func _aquatic_movement(_delta: float) -> void:
+	velocity.y += _water_gravity * _delta
+	velocity.y = min(velocity.y, _max_water_fall_speed)
+
+	if Input.is_action_just_pressed("jump"):
+		velocity.y = _water_jump_force if is_on_floor() else _swiming_impulse
+
+	var direction := Input.get_axis("move_left", "move_right")
+	velocity.x = lerp(velocity.x, direction * _water_speed, _aquatic_acceleration * _delta * 60.0)
+	_update_attack_area_facing(direction)
+
+func _infect_enemy(enemy: Enemy) -> void:
 	if enemy == null or not enemy.has_method("get_infection_data"):
 		return
 	
@@ -168,31 +191,6 @@ func _apply_stats_from_dictionary(data: Dictionary) -> void:
 
 	if data.has("is_in_water"):
 		_is_in_ground = not data["is_in_water"]
-
-
-## Function of the parasite's movement outside of water
-func _terrestrial_movement(_delta: float) -> void:
-	if not is_on_floor():
-		velocity += get_gravity() * _delta
-
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = _ground_jump_force
-
-	var direction := Input.get_axis("move_left", "move_right")
-	_update_attack_area_facing(direction)
-	velocity.x = lerp(velocity.x, direction * _ground_speed, _ground_acceleration * _delta * 60.0)
-
-## Function of the parasite's movement within water
-func _aquatic_movement(_delta: float) -> void:
-	velocity.y += _water_gravity * _delta
-	velocity.y = min(velocity.y, _max_water_fall_speed)
-
-	if Input.is_action_just_pressed("jump"):
-		velocity.y = _water_jump_force if is_on_floor() else _swiming_impulse
-
-	var direction := Input.get_axis("move_left", "move_right")
-	velocity.x = lerp(velocity.x, direction * _water_speed, _aquatic_acceleration * _delta * 60.0)
-	_update_attack_area_facing(direction)
 
 
 func _update_attack_area_facing(direction: float) -> void:

@@ -6,7 +6,7 @@ class_name Enemy
 
 @export_group("Moves")
 @export var _moves:Array[CreatureMove] = []
-@export var _move_cooldowns:Array[float] = [0.0, 0.0]	
+@export var _move_cooldowns:Array[float] = [0.0, 0.0]
 
 @export_group("Ground")
 @export var _ground_speed: float = 300.0
