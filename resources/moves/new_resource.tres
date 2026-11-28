@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="ShellExample" format=3 uid="uid://dwwlogcwodxlv"]
+
+[ext_resource type="Script" uid="uid://dfou506hs1l8g" path="res://resources/moves/scripting/shell_exemple.gd" id="1_ajyvo"]
+
+[resource]
+script = ExtResource("1_ajyvo")
+metadata/_custom_type_script = "uid://dfou506hs1l8g"

@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bs67b5fn5gett"]
+
+[ext_resource type="Texture2D" uid="uid://dg4b0e2r6u2b1" path="res://icon.svg" id="1_0bp8d"]
+[ext_resource type="Script" uid="uid://b165kjoc7bpci" path="res://Scenes/enemy/amphibious_brute.gd" id="1_8vgkj"]
+[ext_resource type="Script" uid="uid://cuv0h5ocrdu1n" path="res://resources/creature_move.gd" id="2_dnbgh"]
+[ext_resource type="Resource" uid="uid://dquwbmhgmu52" path="res://resources/moves/dash.tres" id="3_kmf8b"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_57suy"]
+size = Vector2(120, 121.5)
+
+[node name="Frog" type="CharacterBody2D" unique_id=1228520433]
+collision_layer = 2
+script = ExtResource("1_8vgkj")
+_moves = Array[ExtResource("2_dnbgh")]([ExtResource("3_kmf8b")])
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=107083515]
+modulate = Color(1.92523e-07, 0.7579374, 0.022108572, 1)
+texture = ExtResource("1_0bp8d")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1572308117]
+shape = SubResource("RectangleShape2D_57suy")

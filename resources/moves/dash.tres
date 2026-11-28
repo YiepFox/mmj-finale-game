@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="DashExample" format=3 uid="uid://dquwbmhgmu52"]
+
+[ext_resource type="Script" uid="uid://ev7vu8t7a3vy" path="res://resources/moves/scripting/dash_exemple.gd" id="1_tlikf"]
+
+[resource]
+script = ExtResource("1_tlikf")
+metadata/_custom_type_script = "uid://ev7vu8t7a3vy"
