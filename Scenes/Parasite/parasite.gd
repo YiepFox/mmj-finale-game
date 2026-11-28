@@ -75,9 +75,9 @@ func _physics_process(delta: float) -> void:
 	else:
 		_aquatic_movement(delta)
 
-	if _current_enemy and Input.is_action_just_pressed("move_1"):
+	if Input.is_action_just_pressed("move_1"):
 		_try_use_move(0)
-	if _current_enemy and Input.is_action_just_pressed("move_2"):
+	if Input.is_action_just_pressed("move_2"):
 		_try_use_move(1)
 
 	if not _can_attack:
