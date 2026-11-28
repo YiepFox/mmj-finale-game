@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://dg4b0e2r6u2b1" path="res://icon.svg" id="1_gpndb"]
 [ext_resource type="PackedScene" uid="uid://c5c4it4vkhdpn" path="res://Scenes/Parasite/parasite.tscn" id="2_ciqra"]
 [ext_resource type="PackedScene" uid="uid://c0i8xx23er3ik" path="res://Scenes/enemy/prototype_emeny.tscn" id="3_ciqra"]
+[ext_resource type="PackedScene" uid="uid://bs67b5fn5gett" path="res://Scenes/enemy/frog.tscn" id="4_djyds"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_djyds"]
 texture = ExtResource("1_gpndb")
@@ -28,3 +29,20 @@ position = Vector2(-19, -105)
 [node name="prototype_emeny" parent="." unique_id=1170672184 instance=ExtResource("3_ciqra")]
 position = Vector2(116, -261)
 slide_on_ceiling = false
+_max_life = 5.0
+_ground_speed = 300.0
+_ground_push_force = 300.0
+_ground_hop_force = -120.0
+_ground_knockback_duration = 0.18
+_ground_knockback_friction = 1200.0
+_water_speed = 200.0
+_water_push_force = 170.0
+_water_hop_force = -55.0
+_water_knockback_duration = 0.28
+_water_gravity = 220.0
+_max_water_fall_speed = 130.0
+_water_drag = 9.0
+_is_in_water = true
+
+[node name="Frog" parent="." unique_id=1228520433 instance=ExtResource("4_djyds")]
+position = Vector2(-319, -163)
